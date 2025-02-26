@@ -413,7 +413,7 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "o1-mini": "2023-10",
   "o1-preview": "2023-10",
   "o1-2024-12-17": "2023-10",
-  o1: "2023-10",
+  "o1": "2023-10",
   "o3-mini-2025-01-31": "2023-10",
   "o3-mini": "2023-10",
   // After improvements,
@@ -474,6 +474,7 @@ const googleModels = [
 
 const anthropicModels = [
   "claude-3-5-sonnet-latest",
+  "claude-3-7-sonnet-latest",
   "claude-3-7-sonnet-20250219",
 ];
 
@@ -482,11 +483,6 @@ const baiduModels = [
 ];
 
 const bytedanceModels = [
-  "Doubao-lite-4k",
-  "Doubao-lite-32k",
-  "Doubao-lite-128k",
-  "Doubao-pro-4k",
-  "Doubao-pro-32k",
   "Doubao-pro-128k",
 ];
 
