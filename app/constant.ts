@@ -109,7 +109,7 @@ export const UNFINISHED_INPUT = (id: string) => "unfinished-input-" + id;
 
 export const STORAGE_KEY = "chatgpt-next-web";
 
-export const REQUEST_TIMEOUT_MS = 60000;
+export const REQUEST_TIMEOUT_MS = 300000;
 export const REQUEST_TIMEOUT_MS_FOR_THINKING = REQUEST_TIMEOUT_MS * 5;
 
 export const EXPORT_MESSAGE_CLASS_NAME = "export-markdown";
@@ -408,7 +408,7 @@ You are an AI assistant with access to system tools. Your role is to help users 
    
 `;
 
-export const SUMMARIZE_MODEL = "gpt-4o-mini";
+export const SUMMARIZE_MODEL = "gpt-4o";
 export const GEMINI_SUMMARIZE_MODEL = "gemini-pro";
 export const DEEPSEEK_SUMMARIZE_MODEL = "deepseek-chat";
 
