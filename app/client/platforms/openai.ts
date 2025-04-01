@@ -67,6 +67,8 @@ export interface RequestPayload {
   top_p: number;
   max_tokens?: number;
   max_completion_tokens?: number;
+  reasoning_effort?: string;
+  // O3 only
 }
 
 export interface DalleRequestPayload {
@@ -239,7 +241,11 @@ export class ChatGPTApi implements LLMApi {
 
       // O1 使用 max_completion_tokens 控制token数 (https://platform.openai.com/docs/guides/reasoning#controlling-costs)
       if (isO1OrO3) {
-        requestPayload["max_completion_tokens"] = modelConfig.max_tokens;
+        requestPayload["max_completion_tokens"] = 25000;
+      }
+
+      if (isO3) {
+        requestPayload["reasoning_effort"] = "high";
       }
 
       // add max_tokens to vision model
