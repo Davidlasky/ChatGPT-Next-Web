@@ -241,18 +241,18 @@ export class ChatGPTApi implements LLMApi {
 
       // O1 使用 max_completion_tokens 控制token数 (https://platform.openai.com/docs/guides/reasoning#controlling-costs)
       if (isO1OrO3) {
-        requestPayload["max_completion_tokens"] = 25000;
+        requestPayload["max_completion_tokens"] = modelConfig.max_tokens;
       }
 
       if (isO3) {
         requestPayload["reasoning_effort"] = "high";
+        // make o3-mini defaults to high reasoning effort
       }
 
       // add max_tokens to vision model
       if (visionModel) {
         if (isO1) {
           requestPayload["max_completion_tokens"] = modelConfig.max_tokens;
-
         } else {
           requestPayload["max_tokens"] = Math.max(modelConfig.max_tokens, 4000);
         }
@@ -297,6 +297,11 @@ export class ChatGPTApi implements LLMApi {
           isDalle3 ? OpenaiPath.ImagePath : OpenaiPath.ChatPath,
         );
       }
+      // make a fetch request
+      const requestTimeoutId = setTimeout(
+        () => controller.abort(),
+        getTimeoutMSByModel(options.config.model),
+      );
       if (shouldStream) {
         let index = -1;
         const [tools, funcs] = usePluginStore
@@ -403,12 +408,6 @@ export class ChatGPTApi implements LLMApi {
           signal: controller.signal,
           headers: getHeaders(),
         };
-
-        // make a fetch request
-        const requestTimeoutId = setTimeout(
-          () => controller.abort(),
-          getTimeoutMSByModel(options.config.model),
-        );
 
         const res = await fetch(chatPath, chatPayload);
         clearTimeout(requestTimeoutId);

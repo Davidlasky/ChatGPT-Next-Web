@@ -306,8 +306,16 @@ export function getTimeoutMSByModel(model: string) {
     model.includes("deepseek-r") ||
     model.includes("-thinking") ||
     model.includes("pro")
-  )
+  ) {
+    console.log(
+      "thinking model is " +
+        model +
+        " timeout is " +
+        REQUEST_TIMEOUT_MS_FOR_THINKING,
+    );
     return REQUEST_TIMEOUT_MS_FOR_THINKING;
+  }
+  console.log("normal model is " + model + " timeout is " + REQUEST_TIMEOUT_MS);
   return REQUEST_TIMEOUT_MS;
 }
 
