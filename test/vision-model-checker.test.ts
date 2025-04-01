@@ -15,10 +15,11 @@ describe("isVisionModel", () => {
 
   test("should identify vision models using regex patterns", () => {
     const visionModels = [
-      "gpt-4-vision",
+      "gpt-4o",
       "claude-3-opus",
       "gemini-1.5-pro",
       "gemini-2.0",
+      "gemini-2.5-pro",
       "gemini-exp-vision",
       "learnlm-vision",
       "qwen-vl-max",
