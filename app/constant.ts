@@ -408,7 +408,7 @@ You are an AI assistant with access to system tools. Your role is to help users 
    
 `;
 
-export const SUMMARIZE_MODEL = "gpt-4o-mini";
+export const SUMMARIZE_MODEL = "gpt-4.1-mini";
 export const GEMINI_SUMMARIZE_MODEL = "gemini-2.0-flash";
 export const DEEPSEEK_SUMMARIZE_MODEL = "deepseek-chat";
 
@@ -420,6 +420,8 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   "gemini-2.0-flash": "2024-08",
   "claude-3-7-sonnet-latest": "2024-10",
   "claude-3-5-haiku-latest": "2024-10",
+  "gpt-4.1": "2024-06",
+  "gpt-4.1-mini": "2024-06",
   "deepseek-chat": "2024-07",
   "deepseek-coder": "2024-07",
 };
@@ -440,7 +442,7 @@ export const DEFAULT_TTS_VOICES = [
 
 export const VISION_MODEL_REGEXES = [
   /vision/,
-  /gpt-4o/,
+  /gpt-4\.1/,
   /claude-3/,
   /gemini-1\.5/,
   /gemini-exp/,
@@ -458,24 +460,9 @@ export const VISION_MODEL_REGEXES = [
 
 export const EXCLUDE_VISION_MODEL_REGEXES = [/claude-3-5-haiku-20241022/];
 
-const openaiModels = [
-  // As of July 2024, gpt-4o-mini should be used in place of gpt-3.5-turbo,
-  // as it is cheaper, more capable, multimodal, and just as fast. gpt-3.5-turbo is still available for use in the API.
-  "gpt-3.5-turbo",
-  "gpt-4o",
-  "gpt-4o-mini",
-  "dall-e-3",
-  "o1-mini",
-  "o1-preview",
-  "o1",
-  "o3-mini",
-  "gpt-4.5-preview",
-];
+const openaiModels = ["dall-e-3", "o1", "o3-mini", "gpt-4.1", "gpt-4.1-mini"];
 
 const googleModels = [
-  "gemini-1.5-pro",
-  "gemini-1.5-flash",
-  "gemini-1.5-flash-8b",
   "gemini-2.0-flash",
   "gemini-2.0-flash-lite",
   "gemini-2.5-pro-exp-03-25",
