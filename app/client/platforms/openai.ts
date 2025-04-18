@@ -200,7 +200,8 @@ export class ChatGPTApi implements LLMApi {
     const isDalle3 = _isDalle3(options.config.model);
     const isO1 = options.config.model.startsWith("o1");
     const isO3 = options.config.model.startsWith("o3");
-    const isO1OrO3 = isO1 || isO3;
+    const isO4 = options.config.model.startsWith("o4");
+    const isO1OrO3orO4 = isO1 || isO3 || isO4;
     if (isDalle3) {
       const prompt = getMessageTextContent(
         options.messages.slice(-1)?.pop() as any,
@@ -222,7 +223,7 @@ export class ChatGPTApi implements LLMApi {
         const content = visionModel
           ? await preProcessImageContent(v.content)
           : getMessageTextContent(v);
-        if (!(isO1OrO3 && v.role === "system"))
+        if (!(isO1OrO3orO4 && v.role === "system"))
           messages.push({ role: v.role, content });
       }
 
@@ -231,28 +232,28 @@ export class ChatGPTApi implements LLMApi {
         messages,
         stream: options.config.stream,
         model: modelConfig.model,
-        temperature: !isO1OrO3 ? modelConfig.temperature : 1,
-        presence_penalty: !isO1OrO3 ? modelConfig.presence_penalty : 0,
-        frequency_penalty: !isO1OrO3 ? modelConfig.frequency_penalty : 0,
-        top_p: !isO1OrO3 ? modelConfig.top_p : 1,
+        temperature: !isO1OrO3orO4 ? modelConfig.temperature : 1,
+        presence_penalty: !isO1OrO3orO4 ? modelConfig.presence_penalty : 0,
+        frequency_penalty: !isO1OrO3orO4 ? modelConfig.frequency_penalty : 0,
+        top_p: !isO1OrO3orO4 ? modelConfig.top_p : 1,
         // max_tokens: Math.max(modelConfig.max_tokens, 1024),
         // Please do not ask me why not send max_tokens, no reason, this param is just shit, I dont want to explain anymore.
       };
 
       // O1 使用 max_completion_tokens 控制token数 (https://platform.openai.com/docs/guides/reasoning#controlling-costs)
-      if (isO1OrO3) {
-        requestPayload["max_completion_tokens"] = modelConfig.max_tokens;
+      if (isO1OrO3orO4) {
+        requestPayload["max_completion_tokens"] = 20000;
       }
 
-      if (isO3) {
+      if (isO4) {
         requestPayload["reasoning_effort"] = "high";
-        // make o3-mini defaults to high reasoning effort
+        // make o4-mini defaults to high reasoning effort
       }
 
       // add max_tokens to vision model
       if (visionModel) {
-        if (isO1) {
-          requestPayload["max_completion_tokens"] = modelConfig.max_tokens;
+        if (isO1OrO3orO4) {
+          requestPayload["max_completion_tokens"] = 20000;
         } else {
           requestPayload["max_tokens"] = Math.max(modelConfig.max_tokens, 4000);
         }

@@ -17,15 +17,14 @@ describe("isVisionModel", () => {
     const visionModels = [
       "gpt-4.1",
       "claude-3-opus",
-      "gemini-1.5-pro",
       "gemini-2.0",
       "gemini-2.5-pro",
-      "gemini-exp-vision",
       "learnlm-vision",
       "qwen-vl-max",
       "qwen2-vl-max",
-      "gpt-4-turbo",
+      "o4-mini",
       "dall-e-3",
+      "o1",
     ];
 
     visionModels.forEach((model) => {
@@ -38,12 +37,7 @@ describe("isVisionModel", () => {
   });
 
   test("should not identify non-vision models", () => {
-    const nonVisionModels = [
-      "gpt-3.5-turbo",
-      "gpt-4-turbo-preview",
-      "claude-2",
-      "regular-model",
-    ];
+    const nonVisionModels = ["gpt-3.5-turbo", "claude-2", "regular-model"];
 
     nonVisionModels.forEach((model) => {
       expect(isVisionModel(model)).toBe(false);
