@@ -1,4 +1,4 @@
-FROM node:18-alpine AS base
+FROM node:23-alpine AS base
 
 FROM base AS deps
 
@@ -6,24 +6,20 @@ RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
+COPY package.json package-lock.json ./
 
-RUN yarn config set registry 'https://registry.npmmirror.com/'
-RUN yarn install
+RUN npm config set registry 'https://registry.npmmirror.com/'
+RUN npm install
 
 FROM base AS builder
 
 RUN apk update && apk add --no-cache git
 
-ENV OPENAI_API_KEY=""
-ENV GOOGLE_API_KEY=""
-ENV CODE=""
-
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-RUN yarn build
+RUN npm run build
 
 FROM base AS runner
 WORKDIR /app
@@ -33,6 +29,8 @@ RUN apk add proxychains-ng
 ENV PROXY_URL=""
 ENV OPENAI_API_KEY=""
 ENV GOOGLE_API_KEY=""
+ENV ANTHROPIC_API_KEY=""
+ENV VISION_MODELS=""
 ENV CODE=""
 ENV ENABLE_MCP=""
 
