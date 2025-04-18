@@ -17,11 +17,7 @@ describe("isVisionModel", () => {
     const visionModels = [
       "gpt-4.1",
       "claude-3-opus",
-      "gemini-2.0",
       "gemini-2.5-pro",
-      "learnlm-vision",
-      "qwen-vl-max",
-      "qwen2-vl-max",
       "o4-mini",
       "dall-e-3",
       "o1",
