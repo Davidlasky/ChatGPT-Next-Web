@@ -211,8 +211,8 @@ export class ClaudeApi implements LLMApi {
       messages: prompt,
       stream: shouldStream,
       model: modelConfig.model,
-      max_tokens: 20000,
-      temperature: 1,
+      max_tokens: modelConfig.max_tokens,
+      temperature: modelConfig.temperature,
       top_p: modelConfig.top_p,
       thinking: { type: "enabled", budget_tokens: 10000 },
     };
