@@ -416,11 +416,10 @@ export const KnowledgeCutOffDate: Record<string, string> = {
   default: "2023-10",
   // After improvements,
   // it's now easier to add "KnowledgeCutOffDate" instead of stupid hardcoding it, as was done previously.
-  "gemini-2.5-pro-preview-03-25": "2025-01",
   "gemini-2.5-pro-preview-05-06": "2025-01",
   "gemini-2.5-flash-preview-04-17": "2025-01",
-  "claude-3-7-sonnet-latest": "2024-10",
-  "claude-3-5-sonnet-latest": "2024-10",
+  "claude-opus-4-20250514": "2025-03",
+  "claude-sonnet-4-20250514": "2025-03",
   "gpt-4.1": "2024-06",
   "gpt-4.1-mini": "2024-06",
   "o4-mini": "2024-06",
@@ -445,7 +444,7 @@ export const DEFAULT_TTS_VOICES = [
 export const VISION_MODEL_REGEXES = [
   /vision/,
   /gpt-4/,
-  /claude-3/,
+  /claude-4/,
   /gemini/,
   /^dall-e-3$/, // Matches exactly "dall-e-3"
   /o1/,
@@ -455,18 +454,14 @@ export const VISION_MODEL_REGEXES = [
 
 export const EXCLUDE_VISION_MODEL_REGEXES = [/claude-3-5-haiku-20241022/];
 
-const openaiModels = ["dall-e-3", "o1", "o4-mini", "gpt-4.1", "gpt-4.1-mini"];
+const openaiModels = ["o1", "o4-mini", "gpt-4.1", "gpt-4.1-mini"];
 
 const googleModels = [
   "gemini-2.5-flash-preview-04-17",
-  "gemini-2.5-pro-preview-03-25",
   "gemini-2.5-pro-preview-05-06",
 ];
 
-const anthropicModels = [
-  "claude-3-5-sonnet-latest",
-  "claude-3-7-sonnet-latest",
-];
+const anthropicModels = ["claude-opus-4-20250514", "claude-sonnet-4-20250514"];
 
 const baiduModels = ["ernie-4.0-turbo-8k"];
 
