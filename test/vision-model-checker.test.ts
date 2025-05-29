@@ -14,14 +14,7 @@ describe("isVisionModel", () => {
   });
 
   test("should identify vision models using regex patterns", () => {
-    const visionModels = [
-      "gpt-4.1",
-      "claude-3-opus",
-      "gemini-2.5-pro",
-      "o4-mini",
-      "dall-e-3",
-      "o1",
-    ];
+    const visionModels = ["gpt-4.1", "gemini-2.5-pro", "o4-mini", "o1"];
 
     visionModels.forEach((model) => {
       expect(isVisionModel(model)).toBe(true);

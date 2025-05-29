@@ -30,6 +30,11 @@ export type AnthropicMessage = {
   content: string | MultiBlockContent[];
 };
 
+export type ThinkingCtl = {
+  type: "enabled";
+  budget_tokens: 10000;
+};
+
 export interface AnthropicChatRequest {
   model: string; // The model that will complete your prompt.
   messages: AnthropicMessage[]; // The prompt that you want Claude to complete.
@@ -40,6 +45,7 @@ export interface AnthropicChatRequest {
   top_k?: number; // Only sample from the top K options for each subsequent token.
   metadata?: object; // An object describing metadata about the request.
   stream?: boolean; // Whether to incrementally stream the response using server-sent events.
+  thinking?: ThinkingCtl; // Control the model's thinking process.
 }
 
 export interface ChatRequest {
@@ -52,11 +58,12 @@ export interface ChatRequest {
   top_k?: number; // Only sample from the top K options for each subsequent token.
   metadata?: object; // An object describing metadata about the request.
   stream?: boolean; // Whether to incrementally stream the response using server-sent events.
+  thinking_control?: ThinkingCtl; // Control the model's thinking process.
 }
 
 export interface ChatResponse {
   completion: string;
-  stop_reason: "stop_sequence" | "max_tokens";
+  stop_reason: "stop_sequence" | "max_tokens" | "refusal";
   model: string;
 }
 
@@ -78,8 +85,31 @@ export class ClaudeApi implements LLMApi {
 
   extractMessage(res: any) {
     console.log("[Response] claude response: ", res);
-
-    return res?.content?.[0]?.text;
+    let extractedText = "";
+    if (res && Array.isArray(res.content)) {
+      for (const block of res.content) {
+        if (block.type === "text") {
+          extractedText += block.text;
+        } else if (block.type === "thinking" && block.thinking) {
+          // Log thinking block
+          console.log("[Claude Thinking] Summary: ", block.thinking);
+        }
+      }
+      // Fallback for older 'completion' field if no text blocks found (less likely with Messages API)
+      if (!extractedText && res.completion) {
+        return res.completion;
+      }
+      return extractedText;
+    } else if (res?.completion) {
+      // Fallback for older structure or different response format
+      return res.completion;
+    }
+    // Default if no suitable content found
+    // Check if the response itself is a simple string (e.g. error message)
+    if (typeof res === "string") {
+      return res;
+    }
+    return "";
   }
   async chat(options: ChatOptions): Promise<void> {
     const visionModel = isVisionModel(options.config.model);
@@ -180,14 +210,17 @@ export class ClaudeApi implements LLMApi {
     const requestBody: AnthropicChatRequest = {
       messages: prompt,
       stream: shouldStream,
-
       model: modelConfig.model,
       max_tokens: modelConfig.max_tokens,
       temperature: modelConfig.temperature,
       top_p: modelConfig.top_p,
-      // top_k: modelConfig.top_k,
-      top_k: 5,
+      thinking: { type: "enabled", budget_tokens: 10000 },
     };
+
+    // Add top_k only if thinking is not enabled
+    if (!requestBody.thinking) {
+      requestBody.top_k = 5; // Default value as it was before, or handle modelConfig.top_k if it exists
+    }
 
     const path = this.path(Anthropic.ChatPath);
 
@@ -222,25 +255,39 @@ export class ClaudeApi implements LLMApi {
           let chunkJson:
             | undefined
             | {
-                type: "content_block_delta" | "content_block_stop";
+                type:
+                  | "content_block_delta"
+                  | "content_block_stop"
+                  | "message_delta";
                 content_block?: {
-                  type: "tool_use";
+                  type: "tool_use" | "thinking";
                   id: string;
                   name: string;
+                  thinking?: any;
                 };
                 delta?: {
-                  type: "text_delta" | "input_json_delta";
+                  type: "text_delta" | "input_json_delta" | "thinking_delta";
                   text?: string;
                   partial_json?: string;
+                  thinking?: any;
                 };
                 index: number;
               };
-          chunkJson = JSON.parse(text);
+          try {
+            chunkJson = JSON.parse(text);
+          } catch (e) {
+            console.error("Failed to parse SSE chunk:", text, e);
+            return undefined;
+          }
 
-          if (chunkJson?.content_block?.type == "tool_use") {
+          if (
+            chunkJson &&
+            chunkJson.content_block &&
+            chunkJson.content_block.type === "tool_use"
+          ) {
             index += 1;
-            const id = chunkJson?.content_block.id;
-            const name = chunkJson?.content_block.name;
+            const id = chunkJson.content_block.id;
+            const name = chunkJson.content_block.name;
             runTools.push({
               id,
               type: "function",
