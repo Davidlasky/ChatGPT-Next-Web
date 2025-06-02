@@ -413,7 +413,7 @@ export const GEMINI_SUMMARIZE_MODEL = "gemini-2.0-flash";
 export const DEEPSEEK_SUMMARIZE_MODEL = "deepseek-chat";
 
 export const KnowledgeCutOffDate: Record<string, string> = {
-  default: "2023-10",
+  default: "2024-07",
   // After improvements,
   // it's now easier to add "KnowledgeCutOffDate" instead of stupid hardcoding it, as was done previously.
   "gemini-2.5-pro-preview-05-06": "2025-01",
@@ -444,7 +444,7 @@ export const DEFAULT_TTS_VOICES = [
 export const VISION_MODEL_REGEXES = [
   /vision/,
   /gpt-4/,
-  /claude-4/,
+  /claude/,
   /gemini/,
   /^dall-e-3$/, // Matches exactly "dall-e-3"
   /o1/,
