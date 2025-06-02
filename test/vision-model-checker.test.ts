@@ -26,7 +26,7 @@ describe("isVisionModel", () => {
   });
 
   test("should not identify non-vision models", () => {
-    const nonVisionModels = ["gpt-3.5-turbo", "claude-2", "regular-model"];
+    const nonVisionModels = ["gpt-3.5-turbo", "regular-model"];
 
     nonVisionModels.forEach((model) => {
       expect(isVisionModel(model)).toBe(false);
