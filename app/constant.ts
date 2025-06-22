@@ -454,12 +454,9 @@ export const VISION_MODEL_REGEXES = [
 
 export const EXCLUDE_VISION_MODEL_REGEXES = [/claude-3-5-haiku-20241022/];
 
-const openaiModels = ["o1", "o4-mini", "gpt-4.1", "gpt-4.1-mini"];
+const openaiModels = ["o3", "o3-pro", "o4-mini", "gpt-4.1", "gpt-4.1-mini"];
 
-const googleModels = [
-  "gemini-2.5-flash-preview-05-20",
-  "gemini-2.5-pro-preview-05-06",
-];
+const googleModels = ["gemini-2.5-flash", "gemini-2.5-pro-preview-06-05"];
 
 const anthropicModels = ["claude-opus-4-20250514", "claude-sonnet-4-20250514"];
 
